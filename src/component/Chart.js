@@ -1,10 +1,51 @@
-import React, { useState, useContext } from "react";
+import React, { useContext } from "react";
 import styled from "styled-components";
-import { Bar, Line } from "react-chartjs-2";
+import { Bar, Pie } from "react-chartjs-2";
 import { CovidContext } from "../context/Covid19ApiContext";
 
 const Chart = () => {
-  let { covids, states } = useContext(CovidContext);
+  let { states } = useContext(CovidContext);
+
+  const options = {
+    maintainAspectRatio: false,
+    responsive: true,
+    scales: {
+      yAxes: [
+        {
+          ticks: {
+            beginAtZero: true,
+          },
+        },
+      ],
+      xAxes: [
+        {
+          gridLines: {
+            display: false,
+          },
+          barThickness: 20,
+        },
+      ],
+    },
+  };
+
+  const admission =
+    (states !== undefined &&
+      states
+        .map((state) => {
+          return state.casesOnAdmission;
+        })
+        .slice(0, 10)) ||
+    [];
+
+  const discharged =
+    (states !== undefined &&
+      states
+        .map((state) => {
+          return state.discharged;
+        })
+        .slice(0, 10)) ||
+    [];
+
   const cases =
     (states !== undefined &&
       states
@@ -13,6 +54,7 @@ const Chart = () => {
         })
         .slice(0, 10)) ||
     [];
+
   const deaths =
     (states !== undefined &&
       states
@@ -21,6 +63,7 @@ const Chart = () => {
         })
         .slice(0, 10)) ||
     [];
+
   const newStates =
     states !== undefined &&
     states
@@ -34,23 +77,82 @@ const Chart = () => {
     labels: newStates !== undefined && newStates,
     datasets: [
       {
-        label: "10 highest states with confirmed cases",
+        label: "Confirm Cases",
+        stack: "stack",
         data: cases !== undefined && cases,
         // data: [1000, 1000, 800, 1200, 1200, 400, 800],
         backgroundColor: [
-          "violet",
-          "purple",
-          "teal",
           "orangered",
-          "linen",
+          "orangered",
+          "orangered",
+          "orangered",
+          "orangered",
+          "orangered",
+          "orangered",
+          "orangered",
+          "orangered",
+          "orangered",
+        ],
+      },
+      {
+        label: "Discharged",
+        stack: "stack",
+        data: discharged !== undefined && discharged,
+        // data: [1000, 1000, 800, 1200, 1200, 400, 800],
+        backgroundColor: [
+          "green",
+          "green",
+          "green",
+          "green",
+          "green",
+          "green",
+          "green",
+          "green",
+          "green",
+          "green",
+        ],
+      },
+      {
+        label: "Admission",
+        stack: "stack",
+        data: admission !== undefined && admission,
+        // data: [1000, 1000, 800, 1200, 1200, 400, 800],
+        backgroundColor: [
           "cyan",
-          "gold",
+          "cyan",
+          "cyan",
+          "cyan",
+          "cyan",
+          "cyan",
+          "cyan",
+          "cyan",
+          "cyan",
+          "cyan",
+        ],
+      },
+      {
+        label: "Deaths",
+        stack: "stack",
+        data: deaths !== undefined && deaths,
+        // data: [1000, 1000, 800, 1200, 1200, 400, 800],
+        backgroundColor: [
+          "red",
+          "red",
+          "red",
+          "red",
+          "red",
+          "red",
+          "red",
+          "red",
+          "red",
+          "red",
         ],
       },
     ],
   };
   const deathData = {
     labels: newStates !== undefined && newStates,
+    // labels: newStates !== undefined && newStates,
     datasets: [
       {
         label: "10 highest states with death cases",
@@ -70,56 +172,10 @@ const Chart = () => {
   return (
     <Row>
       <div style={{ width: "100%", height: "300px" }}>
-        <Bar
-          data={confirmCasesData}
-          options={{
-            maintainAspectRatio: false,
-            responsive: true,
-            scales: {
-              yAxes: [
-                {
-                  ticks: {
-                    beginAtZero: true,
-                  },
-                },
-              ],
-              xAxes: [
-                {
-                  gridLines: {
-                    display: false,
-                  },
-                  barThickness: 20,
-                },
-              ],
-            },
-          }}
-        ></Bar>
+        <Bar data={confirmCasesData} options={options}></Bar>
       </div>
       <div style={{ width: "100%", height: "300px" }}>
-        <Line
-          data={deathData}
-          options={{
-            maintainAspectRatio: false,
-            responsive: true,
-            scales: {
-              yAxes: [
-                {
-                  ticks: {
-                    beginAtZero: true,
-                  },
-                },
-              ],
-              xAxes: [
-                {
-                  gridLines: {
-                    display: false,
-                  },
-                  barThickness: 20,
-                },
-              ],
-            },
-          }}
-        ></Line>
+        <Pie data={deathData} options={options}></Pie>
       </div>
     </Row>
   );

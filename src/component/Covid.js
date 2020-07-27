@@ -1,4 +1,4 @@
-import React, { useContext, useState, useEffect, useRef } from "react";
+import React, { useContext, useState, useRef } from "react";
 import { CovidContext } from "../context/Covid19ApiContext";
 import styled from "styled-components";
 import { Table, Icon } from "semantic-ui-react";
